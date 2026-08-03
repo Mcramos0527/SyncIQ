@@ -1,0 +1,14 @@
+# Force LF regardless of platform/global autocrlf settings — several
+# template-literal Tailwind strings in src/templates are whitespace-
+# sensitive (eslint-plugin-better-tailwindcss), and CRLF conversion on
+# Windows checkout corrupts them, causing spurious lint failures.
+* text=auto eol=lf
+
+# Binary assets — never touch line endings
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
