@@ -5,6 +5,18 @@ export const Env = createEnv({
   server: {
     CLERK_SECRET_KEY: z.string().min(1),
     DATABASE_URL: z.string().min(1),
+    // Ad-platform OAuth + token encryption -- all optional until a real
+    // customer POC is approved and we register the developer apps.
+    // Route handlers check for these at request time and return a clear
+    // "not configured" error instead of a generic failure.
+    TOKEN_ENCRYPTION_KEY: z.string().optional(),
+    META_APP_ID: z.string().optional(),
+    META_APP_SECRET: z.string().optional(),
+    META_REDIRECT_URI: z.string().optional(),
+    GOOGLE_CLIENT_ID: z.string().optional(),
+    GOOGLE_CLIENT_SECRET: z.string().optional(),
+    GOOGLE_REDIRECT_URI: z.string().optional(),
+    N8N_WEBHOOK_SECRET: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().optional(),
@@ -20,6 +32,14 @@ export const Env = createEnv({
   runtimeEnv: {
     CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
     DATABASE_URL: process.env.DATABASE_URL,
+    TOKEN_ENCRYPTION_KEY: process.env.TOKEN_ENCRYPTION_KEY,
+    META_APP_ID: process.env.META_APP_ID,
+    META_APP_SECRET: process.env.META_APP_SECRET,
+    META_REDIRECT_URI: process.env.META_REDIRECT_URI,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
+    N8N_WEBHOOK_SECRET: process.env.N8N_WEBHOOK_SECRET,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
