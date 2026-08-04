@@ -15,6 +15,13 @@
       "when": 1785780863295,
       "tag": "0001_lucky_mulholland_black",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785782125756,
+      "tag": "0002_silent_darwin",
+      "breakpoints": true
     }
   ]
 }

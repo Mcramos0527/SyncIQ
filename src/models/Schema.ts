@@ -9,6 +9,7 @@ import {
   serial,
   text,
   timestamp,
+  unique,
   uuid,
 } from 'drizzle-orm/pg-core';
 
@@ -39,6 +40,21 @@ export const todoSchema = pgTable('todo', {
 
 // workspaceId everywhere below is the Clerk organization id — Clerk owns
 // workspace/membership data, we only ever reference it by string id.
+
+export const platformConnectionSchema = pgTable('platform_connections', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  workspaceId: text('workspace_id').notNull(),
+  platform: text('platform').notNull(), // meta | ga4
+  // Encrypted via src/libs/TokenCipher.ts -- never store raw tokens.
+  accessTokenEnc: text('access_token_enc').notNull(),
+  refreshTokenEnc: text('refresh_token_enc'),
+  accountId: text('account_id').notNull(),
+  expiresAt: timestamp('expires_at', { mode: 'date' }),
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+}, table => [
+  // Reconnecting a platform updates the existing row instead of duplicating it.
+  unique('platform_connections_workspace_platform_unique').on(table.workspaceId, table.platform),
+]);
 
 export const eventSchema = pgTable('events', {
   id: uuid('id').primaryKey().defaultRandom(),
