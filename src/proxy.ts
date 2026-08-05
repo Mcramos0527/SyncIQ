@@ -20,10 +20,29 @@ const isAuthPage = createRouteMatcher([
   '/:locale/sign-up(.*)',
 ]);
 
+// API routes never take a locale prefix and don't render pages, so they're
+// handled separately below rather than through handleI18nRouting.
+const isApiRoute = createRouteMatcher(['/api(.*)']);
+
+// n8n's WF1 ingestion webhook authenticates with N8N_WEBHOOK_SECRET, not a
+// Clerk session -- everything else under /api needs a signed-in user.
+const isPublicApiRoute = createRouteMatcher(['/api/ingest(.*)']);
+
 export default async function proxy(
   request: NextRequest,
   event: NextFetchEvent,
 ) {
+  if (isApiRoute(request)) {
+    if (isPublicApiRoute(request)) {
+      return NextResponse.next();
+    }
+
+    return clerkMiddleware(async (auth) => {
+      await auth.protect();
+      return NextResponse.next();
+    })(request, event);
+  }
+
   // Clerk keyless mode doesn't work with i18n, this is why we need to run the middleware conditionally
   if (
     isAuthPage(request) || isProtectedRoute(request)
