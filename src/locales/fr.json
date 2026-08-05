@@ -101,7 +101,8 @@
     "meta_description": "Un template gratuit et open-source de landing page pour votre entreprise SaaS, construit avec Next.js, TypeScript, Shadcn UI et Tailwind CSS.",
     "home": "Accueil",
     "members": "Membres",
-    "settings": "Réglages"
+    "settings": "Réglages",
+    "connections": "Connexions"
   },
   "DashboardIndexPage": {
     "title_bar": "Tableau de bord",
@@ -118,5 +119,11 @@
   "OrganizationProfilePage": {
     "title_bar": "Gestion de l’organisation",
     "title_bar_description": "Gérer votre organisation"
+  },
+  "ConnectionsPage": {
+    "title_bar": "Connexions",
+    "title_bar_description": "Connectez vos comptes publicitaires pour commencer à récupérer les données de performance",
+    "meta_description": "Connectez-vous pour récupérer les dépenses, le ROAS, le CTR et le CPM des campagnes.",
+    "ga4_description": "Connectez-vous pour récupérer les sessions, le taux de rebond et les entonnoirs de conversion."
   }
 }
