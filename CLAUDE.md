@@ -38,6 +38,12 @@ the boilerplate via Supabase. As pulled in, the actual boilerplate uses:
 - **pgvector** (needed for Phase 4 persona embeddings) requires an actual
   Postgres extension — not available on local PGlite. This becomes relevant
   once Phase 4 starts; until then it's a documented gap, not a blocker.
+- **WF1 is thinner in n8n than described below.** The fetch/normalize/
+  upsert logic for Meta and GA4 now lives in this repo
+  (`src/features/ingestion/`, `src/app/api/ingest/*`) instead of n8n
+  Code nodes, so it's unit tested and type-checked. n8n's WF1
+  (`n8n/wf1-data-ingestion.json`) is just a 6-hourly scheduler that calls
+  those two endpoints. See `n8n/README.md` for the full rationale.
 
 Everything else in the brief below — the AI analysis engine, synthetic
 panel design, n8n workflow map, freemium gating rules, design tokens,
