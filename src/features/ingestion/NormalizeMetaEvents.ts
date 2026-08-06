@@ -1,7 +1,7 @@
 export type NormalizedEvent = {
   workspaceId: string;
   platform: 'meta' | 'ga4';
-  metricType: 'spend' | 'impressions' | 'clicks' | 'conversions' | 'sessions' | 'bounce_rate';
+  metricType: 'spend' | 'impressions' | 'clicks' | 'conversions' | 'revenue' | 'sessions' | 'bounce_rate';
   value: string;
   campaignId: string;
   date: string;
@@ -15,6 +15,10 @@ export type MetaInsightRow = {
   impressions: string;
   clicks: string;
   actions?: { action_type: string; value: string }[];
+  // Same shape as `actions`, but the monetary value of each conversion --
+  // this is what makes ROAS (revenue / spend) computable on the overview
+  // dashboard. Without it we'd only have a conversion count, not $ value.
+  action_values?: { action_type: string; value: string }[];
 };
 
 // TODO: Meta groups several action_types under "conversion" depending on
@@ -26,11 +30,12 @@ const CONVERSION_ACTION_TYPES = new Set([
   'purchase',
 ]);
 
-function extractConversions(row: MetaInsightRow): string {
-  const conversionAction = row.actions?.find(action =>
-    CONVERSION_ACTION_TYPES.has(action.action_type));
+function extractActionValue(
+  actions: { action_type: string; value: string }[] | undefined,
+): string {
+  const match = actions?.find(action => CONVERSION_ACTION_TYPES.has(action.action_type));
 
-  return conversionAction?.value ?? '0';
+  return match?.value ?? '0';
 }
 
 export function normalizeMetaEvents(
@@ -50,7 +55,8 @@ export function normalizeMetaEvents(
       { ...shared, metricType: 'spend' as const, value: row.spend },
       { ...shared, metricType: 'impressions' as const, value: row.impressions },
       { ...shared, metricType: 'clicks' as const, value: row.clicks },
-      { ...shared, metricType: 'conversions' as const, value: extractConversions(row) },
+      { ...shared, metricType: 'conversions' as const, value: extractActionValue(row.actions) },
+      { ...shared, metricType: 'revenue' as const, value: extractActionValue(row.action_values) },
     ];
   });
 }

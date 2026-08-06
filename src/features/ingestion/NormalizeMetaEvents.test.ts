@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { normalizeMetaEvents } from './NormalizeMetaEvents';
 
 describe('normalizeMetaEvents', () => {
-  it('splits one insight row into one event per metric', () => {
+  it('splits one insight row into one event per metric, including revenue', () => {
     const insights = [
       {
         campaign_id: '120210000000001',
@@ -11,12 +11,13 @@ describe('normalizeMetaEvents', () => {
         impressions: '1000',
         clicks: '50',
         actions: [{ action_type: 'offsite_conversion', value: '3' }],
+        action_values: [{ action_type: 'offsite_conversion', value: '150.00' }],
       },
     ];
 
     const events = normalizeMetaEvents(insights, 'workspace_123');
 
-    expect(events).toHaveLength(4);
+    expect(events).toHaveLength(5);
     expect(events).toContainEqual({
       workspaceId: 'workspace_123',
       platform: 'meta',
@@ -30,9 +31,13 @@ describe('normalizeMetaEvents', () => {
       metricType: 'conversions',
       value: '3',
     }));
+    expect(events).toContainEqual(expect.objectContaining({
+      metricType: 'revenue',
+      value: '150.00',
+    }));
   });
 
-  it('defaults conversions to 0 when no conversion action is present', () => {
+  it('defaults conversions and revenue to 0 when no conversion action is present', () => {
     const insights = [
       {
         campaign_id: 'c1',
@@ -41,12 +46,14 @@ describe('normalizeMetaEvents', () => {
         impressions: '100',
         clicks: '5',
         actions: [],
+        action_values: [],
       },
     ];
 
     const events = normalizeMetaEvents(insights, 'ws');
 
     expect(events.find(e => e.metricType === 'conversions')?.value).toBe('0');
+    expect(events.find(e => e.metricType === 'revenue')?.value).toBe('0');
   });
 
   it('returns an empty array for empty input', () => {

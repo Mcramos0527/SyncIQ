@@ -14,7 +14,7 @@ async function fetchYesterdaysInsights(accountId: string, accessToken: string): 
   const url = new URL(`https://graph.facebook.com/${META_API_VERSION}/act_${accountId}/insights`);
   url.searchParams.set('access_token', accessToken);
   url.searchParams.set('level', 'campaign');
-  url.searchParams.set('fields', 'campaign_id,spend,impressions,clicks,actions');
+  url.searchParams.set('fields', 'campaign_id,spend,impressions,clicks,actions,action_values');
   url.searchParams.set('date_preset', 'yesterday');
   url.searchParams.set('time_increment', '1');
 
