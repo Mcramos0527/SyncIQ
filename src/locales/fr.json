@@ -105,12 +105,17 @@
     "connections": "Connexions"
   },
   "DashboardIndexPage": {
-    "title_bar": "Tableau de bord",
-    "title_bar_description": "Bienvenue sur votre tableau de bord",
-    "message_state_title": "Commençons",
-    "message_state_description": "Personnalisez cette page en modifiant le fichier dans <code>dashboard/page.tsx</code>.",
-    "message_state_alternative": "Besoin de fonctionnalités avancées ? Next.js 16 & React 19, Multi-tenancy & Équipes, Rôles & Permissions, Shadcn UI,\nTypesafety de bout en bout avec oRPC, Paiement Stripe, Mode clair / sombre. Essayez <url></url>.",
-    "max_message": "Ou, besoin d'une stack d'auth auto-hébergée (Better Auth) ? Essayez <url></url>."
+    "title_bar": "Aperçu",
+    "title_bar_description": "Performance de vos comptes publicitaires connectés, sur les 30 derniers jours",
+    "empty_state_title": "Connectez votre premier compte publicitaire",
+    "empty_state_description": "Reliez Meta Ads ou Google Analytics 4 pour commencer à récupérer les données de performance.",
+    "empty_state_button": "Connecter un compte",
+    "kpi_spend": "Dépenses totales",
+    "kpi_roas": "ROAS mixte",
+    "kpi_conversions": "Conversions",
+    "kpi_top_campaign": "Campagne principale",
+    "chart_meta_spend": "Dépenses Meta Ads",
+    "chart_ga4_sessions": "Sessions GA4"
   },
   "UserProfilePage": {
     "title_bar": "Profil utilisateur",

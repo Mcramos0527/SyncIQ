@@ -105,12 +105,17 @@
     "connections": "Connections"
   },
   "DashboardIndexPage": {
-    "title_bar": "Dashboard",
-    "title_bar_description": "Welcome to your dashboard",
-    "message_state_title": "Let's get started",
-    "message_state_description": "Customize this page by editing the file at <code>dashboard/page.tsx</code>.",
-    "message_state_alternative": "Need advanced features? Next.js 16 & React 19, Multi-tenancy & Teams, Roles & Permissions, Shadcn UI,\nEnd-to-End Typesafety with oRPC, Stripe Payment, Light / Dark mode. Try <url></url>.",
-    "max_message": "Or, need a Self-hosted auth stack (Better Auth)? Try <url></url>."
+    "title_bar": "Overview",
+    "title_bar_description": "Performance across your connected ad accounts, last 30 days",
+    "empty_state_title": "Connect your first ad account",
+    "empty_state_description": "Link Meta Ads or Google Analytics 4 to start pulling in performance data.",
+    "empty_state_button": "Connect an account",
+    "kpi_spend": "Total spend",
+    "kpi_roas": "Blended ROAS",
+    "kpi_conversions": "Conversions",
+    "kpi_top_campaign": "Top campaign",
+    "chart_meta_spend": "Meta Ads spend",
+    "chart_ga4_sessions": "GA4 sessions"
   },
   "UserProfilePage": {
     "title_bar": "User Profile",
