@@ -38,12 +38,23 @@ the boilerplate via Supabase. As pulled in, the actual boilerplate uses:
 - **pgvector** (needed for Phase 4 persona embeddings) requires an actual
   Postgres extension — not available on local PGlite. This becomes relevant
   once Phase 4 starts; until then it's a documented gap, not a blocker.
-- **WF1 is thinner in n8n than described below.** The fetch/normalize/
-  upsert logic for Meta and GA4 now lives in this repo
-  (`src/features/ingestion/`, `src/app/api/ingest/*`) instead of n8n
-  Code nodes, so it's unit tested and type-checked. n8n's WF1
-  (`n8n/wf1-data-ingestion.json`) is just a 6-hourly scheduler that calls
-  those two endpoints. See `n8n/README.md` for the full rationale.
+- **WF1 and WF2 are thinner in n8n than described below.** The fetch/
+  normalize/upsert logic for Meta and GA4, and the KPI-aggregate +
+  Claude-call + schema-validate logic for proposal generation, now live
+  in this repo (`src/features/ingestion/`, `src/features/proposals/`,
+  `src/app/api/ingest/*`, `src/app/api/proposals/generate`) instead of
+  n8n Code nodes, so all of it is unit tested and type-checked. n8n's
+  WF1/WF2 exports are just schedulers that call those endpoints. See
+  `n8n/README.md` for the full rationale.
+- **No `workspaces` table existed before Phase 3.** Clerk owns
+  everything about a workspace except billing plan, and Phase 3 needed
+  *something* to gate AI features on (`isPro(workspaceId)`, per this
+  brief's own gating rules). Added a minimal `workspaces (id, plan,
+  created_at)` table for exactly that -- `id` is the Clerk org id, `plan`
+  defaults to `'free'` and gets flipped manually until Stripe exists.
+  Not a reintroduction of the brief's original Supabase-era `workspaces`
+  table (no `name`/`stripe_customer_id` columns -- Clerk already has the
+  name, and there's no Stripe customer yet).
 
 Everything else in the brief below — the AI analysis engine, synthetic
 panel design, n8n workflow map, freemium gating rules, design tokens,
