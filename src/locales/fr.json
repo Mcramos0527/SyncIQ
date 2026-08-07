@@ -102,7 +102,8 @@
     "home": "Accueil",
     "members": "Membres",
     "settings": "Réglages",
-    "connections": "Connexions"
+    "connections": "Connexions",
+    "proposals": "Propositions"
   },
   "DashboardIndexPage": {
     "title_bar": "Aperçu",
@@ -130,5 +131,29 @@
     "title_bar_description": "Connectez vos comptes publicitaires pour commencer à récupérer les données de performance",
     "meta_description": "Connectez-vous pour récupérer les dépenses, le ROAS, le CTR et le CPM des campagnes.",
     "ga4_description": "Connectez-vous pour récupérer les sessions, le taux de rebond et les entonnoirs de conversion."
+  },
+  "ProposalsPage": {
+    "title_bar": "Propositions",
+    "title_bar_description": "Changements de stratégie générés par IA, basés sur vos 7 derniers jours de données",
+    "locked_title": "Disponible avec le plan Pro",
+    "locked_description": "L'analyse IA quotidienne et la génération de propositions sont une fonctionnalité Pro.",
+    "empty_state": "Aucune proposition pour l'instant. L'analyse quotidienne s'exécute à 02h00 UTC dès qu'il y a au moins une semaine de données.",
+    "col_problem": "Problème",
+    "col_platform": "Plateforme",
+    "col_confidence": "Confiance",
+    "col_status": "Statut",
+    "col_created": "Créée"
+  },
+  "ProposalDetailPage": {
+    "title_bar": "Proposition",
+    "section_problem": "Problème",
+    "section_root_cause": "Cause racine",
+    "section_proposal": "Changement proposé",
+    "section_status": "Statut",
+    "section_panel": "Panel synthétique",
+    "field_action": "Action",
+    "field_target": "Cible",
+    "confidence_label": "Confiance",
+    "panel_pending": "La validation par panel synthétique n'est pas encore branchée -- une fois en place, le taux d'approbation et la répartition par persona s'afficheront ici."
   }
 }

@@ -102,7 +102,8 @@
     "home": "Home",
     "members": "Members",
     "settings": "Settings",
-    "connections": "Connections"
+    "connections": "Connections",
+    "proposals": "Proposals"
   },
   "DashboardIndexPage": {
     "title_bar": "Overview",
@@ -130,5 +131,29 @@
     "title_bar_description": "Connect your ad accounts to start pulling performance data",
     "meta_description": "Connect to pull campaign spend, ROAS, CTR, and CPM.",
     "ga4_description": "Connect to pull sessions, bounce rate, and conversion funnels."
+  },
+  "ProposalsPage": {
+    "title_bar": "Proposals",
+    "title_bar_description": "AI-generated strategy changes, backed by your last 7 days of data",
+    "locked_title": "Available on the Pro plan",
+    "locked_description": "Daily AI analysis and proposal generation are a Pro feature.",
+    "empty_state": "No proposals yet. The daily analysis runs at 02:00 UTC once there's at least a week of data.",
+    "col_problem": "Problem",
+    "col_platform": "Platform",
+    "col_confidence": "Confidence",
+    "col_status": "Status",
+    "col_created": "Created"
+  },
+  "ProposalDetailPage": {
+    "title_bar": "Proposal",
+    "section_problem": "Problem",
+    "section_root_cause": "Root cause",
+    "section_proposal": "Proposed change",
+    "section_status": "Status",
+    "section_panel": "Synthetic panel",
+    "field_action": "Action",
+    "field_target": "Target",
+    "confidence_label": "Confidence",
+    "panel_pending": "Synthetic panel validation isn't wired up yet -- once it is, approval rate and persona breakdown will show here."
   }
 }
