@@ -154,6 +154,9 @@
     "field_action": "Action",
     "field_target": "Cible",
     "confidence_label": "Confiance",
-    "panel_pending": "La validation par panel synthétique n'est pas encore branchée -- une fois en place, le taux d'approbation et la répartition par persona s'afficheront ici."
+    "panel_pending": "Aucun résultat de panel pour l'instant -- la validation s'exécute automatiquement juste après la génération d'une proposition.",
+    "panel_approval_rate": "Taux d'approbation",
+    "panel_top_angle": "Angle principal",
+    "panel_personas_scored": "Personas évalués"
   }
 }

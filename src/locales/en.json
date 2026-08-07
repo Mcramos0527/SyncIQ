@@ -154,6 +154,9 @@
     "field_action": "Action",
     "field_target": "Target",
     "confidence_label": "Confidence",
-    "panel_pending": "Synthetic panel validation isn't wired up yet -- once it is, approval rate and persona breakdown will show here."
+    "panel_pending": "No panel results yet -- validation runs automatically right after a proposal is generated.",
+    "panel_approval_rate": "Approval rate",
+    "panel_top_angle": "Top angle",
+    "panel_personas_scored": "Personas scored"
   }
 }

@@ -4,9 +4,10 @@ import { and, eq } from 'drizzle-orm';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { TitleBar } from '@/features/dashboard/TitleBar';
+import { aggregateValidationResults } from '@/features/panel/AggregateValidationResults';
 import { ProposalStatusBadge } from '@/features/proposals/ProposalStatusBadge';
 import { db } from '@/libs/DB';
-import { proposalSchema } from '@/models/Schema';
+import { proposalEvaluationSchema, proposalSchema } from '@/models/Schema';
 
 export default async function ProposalDetailPage(props: {
   params: Promise<{ locale: string; id: string }>;
@@ -29,6 +30,20 @@ export default async function ProposalDetailPage(props: {
   }
 
   const change = proposal.proposalJson as StoredProposalChange;
+
+  const evaluations = await db
+    .select()
+    .from(proposalEvaluationSchema)
+    .where(eq(proposalEvaluationSchema.proposalId, proposal.id));
+
+  const panel = aggregateValidationResults(evaluations.map(e => ({
+    persona_id: e.personaId,
+    would_respond: e.wouldRespond,
+    confidence: e.confidence,
+    preferred_angle: e.preferredAngle ?? '',
+    price_ceiling: Number(e.priceCeiling ?? 0),
+    channel_fit: e.channelFit ?? '',
+  })));
 
   return (
     <>
@@ -105,7 +120,27 @@ export default async function ProposalDetailPage(props: {
 
           <section className="rounded-lg border bg-card p-4 shadow-sm">
             <h3 className="text-sm font-semibold">{t('section_panel')}</h3>
-            <p className="mt-1 text-xs text-muted-foreground">{t('panel_pending')}</p>
+
+            {evaluations.length === 0
+              ? (
+                  <p className="mt-1 text-xs text-muted-foreground">{t('panel_pending')}</p>
+                )
+              : (
+                  <dl className="
+                    mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm
+                  "
+                  >
+                    <dt className="text-muted-foreground">{t('panel_approval_rate')}</dt>
+                    <dd className="font-medium">
+                      {Math.round(panel.approvalRate * 100)}
+                      %
+                    </dd>
+                    <dt className="text-muted-foreground">{t('panel_top_angle')}</dt>
+                    <dd className="capitalize">{panel.topAngle?.replaceAll('_', ' ') ?? '—'}</dd>
+                    <dt className="text-muted-foreground">{t('panel_personas_scored')}</dt>
+                    <dd>{evaluations.length}</dd>
+                  </dl>
+                )}
           </section>
         </div>
       </div>
