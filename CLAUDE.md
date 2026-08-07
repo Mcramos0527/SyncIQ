@@ -55,6 +55,25 @@ the boilerplate via Supabase. As pulled in, the actual boilerplate uses:
   Not a reintroduction of the brief's original Supabase-era `workspaces`
   table (no `name`/`stripe_customer_id` columns -- Clerk already has the
   name, and there's no Stripe customer yet).
+- **WF3 runs synchronously inside WF2's request instead of on a Postgres
+  trigger.** The brief's "Trigger: Postgres new row in proposals" needs
+  logical replication wired into n8n's Postgres trigger node against a
+  real database -- not available on PGlite, and not worth building
+  against a database that doesn't exist yet. `validateProposal()` just
+  gets called directly, in-process, right after a proposal is inserted.
+  Revisit once there's a real Supabase project.
+- **The brief's "regenerate + retry (max 2)" loop on WF3 rejection isn't
+  built.** A rejected proposal (`approval_rate < 0.60`) is left as-is --
+  a complete, valid MVP outcome on its own. See the TODO in
+  `src/features/panel/ValidateProposal.ts`.
+- **500 personas are the same fixed panel for every workspace**, not
+  individually generated per workspace. `src/features/personas/
+  GeneratePersonas.ts` deterministically cycles through fixed
+  demographic/psychographic value pools -- same output every call, by
+  design (that's what "hardcoded" means for the MVP scope item). Each
+  workspace gets its own copy of the 500 rows (seeded lazily on first
+  validation), but the content is identical across workspaces until
+  real persona generation/calibration (v2) exists.
 
 Everything else in the brief below — the AI analysis engine, synthetic
 panel design, n8n workflow map, freemium gating rules, design tokens,

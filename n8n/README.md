@@ -29,6 +29,15 @@ generation.json` daily at 02:00 UTC. n8n still owns the "run this on a
 schedule" job per the brief's automation-first architecture; it just
 isn't where the actual logic lives anymore.
 
+## No WF3 export -- it isn't a separate n8n workflow
+
+The brief's WF3 (synthetic panel validation) triggers on a new row in
+`proposals`. That needs Postgres logical replication wired into n8n's
+Postgres trigger node against a real database, which doesn't exist yet
+(see CLAUDE.md Deviations). Until then, `validateProposal()` just runs
+in-process, synchronously, right after WF2 inserts a proposal --
+there's nothing to import into n8n for it.
+
 ## Required n8n credentials/config once this gets imported
 
 - An HTTP Header Auth credential named `SyncIQ Ingest Secret` with header
