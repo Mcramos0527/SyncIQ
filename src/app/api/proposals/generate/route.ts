@@ -1,6 +1,7 @@
 import { and, eq, gte } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 import { isPro } from '@/features/billing/IsPro';
+import { validateProposal } from '@/features/panel/ValidateProposal';
 import { aggregateWeeklyKpis } from '@/features/proposals/AggregateWeeklyKpis';
 import { buildProposalPrompt } from '@/features/proposals/BuildProposalPrompt';
 import { callClaudeForProposal } from '@/features/proposals/GenerateProposal';
@@ -39,7 +40,7 @@ async function generateForWorkspace(workspaceId: string) {
     if (parsed.success) {
       const targetCampaign = campaigns.find(c => c.campaignId === parsed.data.proposal.target);
 
-      await db.insert(proposalsTable).values({
+      const [inserted] = await db.insert(proposalsTable).values({
         workspaceId,
         platform: targetCampaign?.platform ?? 'meta',
         problem: parsed.data.problem,
@@ -50,9 +51,25 @@ async function generateForWorkspace(workspaceId: string) {
         },
         confidence: parsed.data.confidence,
         status: 'pending_validation',
-      });
+      }).returning({ id: proposalsTable.id });
 
-      return { workspaceId, status: 'created' as const };
+      // WF3 "triggers on new proposal" -- there's no live Postgres-trigger-
+      // to-n8n wiring (needs real Supabase + logical replication), so we
+      // just run validation synchronously right after the insert instead.
+      if (inserted) {
+        try {
+          await validateProposal(inserted.id, workspaceId);
+        } catch (validationError) {
+          return {
+            workspaceId,
+            status: 'created' as const,
+            proposalId: inserted.id,
+            validationError: validationError instanceof Error ? validationError.message : 'Unknown validation error',
+          };
+        }
+      }
+
+      return { workspaceId, status: 'created' as const, proposalId: inserted?.id };
     }
 
     lastError = parsed.error;
