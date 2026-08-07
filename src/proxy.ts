@@ -24,9 +24,10 @@ const isAuthPage = createRouteMatcher([
 // handled separately below rather than through handleI18nRouting.
 const isApiRoute = createRouteMatcher(['/api(.*)']);
 
-// n8n's WF1 ingestion webhook authenticates with N8N_WEBHOOK_SECRET, not a
-// Clerk session -- everything else under /api needs a signed-in user.
-const isPublicApiRoute = createRouteMatcher(['/api/ingest(.*)']);
+// n8n's ingestion (WF1) and proposal-generation (WF2) webhooks authenticate
+// with N8N_WEBHOOK_SECRET, not a Clerk session -- everything else under
+// /api needs a signed-in user.
+const isPublicApiRoute = createRouteMatcher(['/api/ingest(.*)', '/api/proposals/generate(.*)']);
 
 export default async function proxy(
   request: NextRequest,
