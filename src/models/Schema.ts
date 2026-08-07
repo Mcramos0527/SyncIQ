@@ -41,6 +41,17 @@ export const todoSchema = pgTable('todo', {
 // workspaceId everywhere below is the Clerk organization id — Clerk owns
 // workspace/membership data, we only ever reference it by string id.
 
+// Clerk owns everything about a workspace *except* billing plan --
+// there's no Stripe integration yet (see CLAUDE.md Deviations), so this
+// table exists purely to hold the free/pro flag that gates AI features.
+// A workspace with no row here is treated as free. Flip plan manually
+// until the Stripe upgrade flow exists.
+export const workspaceSchema = pgTable('workspaces', {
+  id: text('id').primaryKey(), // Clerk organization id
+  plan: text('plan').notNull().default('free'), // free | pro
+  createdAt: timestamp('created_at', { mode: 'date' }).defaultNow().notNull(),
+});
+
 export const platformConnectionSchema = pgTable('platform_connections', {
   id: uuid('id').primaryKey().defaultRandom(),
   workspaceId: text('workspace_id').notNull(),
