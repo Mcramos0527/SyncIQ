@@ -1,10 +1,11 @@
+import type { NextRequest } from 'next/server';
 import { randomBytes } from 'node:crypto';
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { buildMetaAuthorizeUrl } from '@/features/connections/MetaOAuthClient';
 import { Env } from '@/libs/Env';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const { orgId } = await auth();
 
   if (!orgId) {
@@ -12,12 +13,13 @@ export async function GET() {
   }
 
   if (!Env.META_APP_ID || !Env.META_REDIRECT_URI) {
-    return NextResponse.json(
-      {
-        error: 'Meta Ads isn\'t configured yet -- set META_APP_ID, META_APP_SECRET, and META_REDIRECT_URI in .env.local.',
-      },
-      { status: 503 },
+    const target = new URL('/dashboard/settings/connections', request.url);
+    target.searchParams.set('meta', 'error');
+    target.searchParams.set(
+      'message',
+      'Meta Ads isn\'t configured yet -- set META_APP_ID, META_APP_SECRET, and META_REDIRECT_URI in .env.local.',
     );
+    return NextResponse.redirect(target);
   }
 
   const state = randomBytes(16).toString('hex');

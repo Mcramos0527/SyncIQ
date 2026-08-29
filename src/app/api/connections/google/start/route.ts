@@ -1,10 +1,11 @@
+import type { NextRequest } from 'next/server';
 import { randomBytes } from 'node:crypto';
 import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { buildGoogleAuthorizeUrl } from '@/features/connections/GoogleOAuthClient';
 import { Env } from '@/libs/Env';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const { orgId } = await auth();
 
   if (!orgId) {
@@ -12,12 +13,13 @@ export async function GET() {
   }
 
   if (!Env.GOOGLE_CLIENT_ID || !Env.GOOGLE_REDIRECT_URI) {
-    return NextResponse.json(
-      {
-        error: 'GA4 isn\'t configured yet -- set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_REDIRECT_URI in .env.local.',
-      },
-      { status: 503 },
+    const target = new URL('/dashboard/settings/connections', request.url);
+    target.searchParams.set('google', 'error');
+    target.searchParams.set(
+      'message',
+      'GA4 isn\'t configured yet -- set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_REDIRECT_URI in .env.local.',
     );
+    return NextResponse.redirect(target);
   }
 
   const state = randomBytes(16).toString('hex');
