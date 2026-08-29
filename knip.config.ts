@@ -12,6 +12,10 @@ const config: KnipConfig = {
   ignoreDependencies: [
     '@clerk/shared',
     '@swc/helpers', // Avoid error in CI: "`npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync."
+    // Provides the `pglite-server` binary, invoked from scripts/pglite-dev-server.mjs.
+    // Knip only traces binary usage from package.json script strings, not from
+    // inside arbitrary JS files, so it can't see this one's still in use.
+    '@electric-sql/pglite-socket',
   ],
   // Include custom Playwright test file suffixes
   playwright: {
