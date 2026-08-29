@@ -54,6 +54,8 @@ export async function validateProposal(proposalId: string, workspaceId: string):
   const allEvaluations: PersonaEvaluation[] = [];
 
   for (const batch of batches) {
+    const batchPersonaIds = new Set(batch.map(row => row.id));
+
     const prompt = buildValidationPrompt({
       problem: proposal.problem,
       proposalSummary,
@@ -67,7 +69,21 @@ export async function validateProposal(proposalId: string, workspaceId: string):
     const parsed = parseValidationResponse(raw);
 
     if (parsed.success) {
-      allEvaluations.push(...parsed.data);
+      // Claude occasionally mistypes or half-echoes a persona_id across a
+      // batch of 50 UUIDs. persona_id is a real FK to synthetic_users, so
+      // one bad id would fail the whole batch's insert -- drop anything
+      // that doesn't match a persona we actually sent, and dedupe in case
+      // the same persona gets evaluated twice.
+      const seen = new Set<string>();
+      const validEvaluations = parsed.data.filter((evaluation) => {
+        if (!batchPersonaIds.has(evaluation.persona_id) || seen.has(evaluation.persona_id)) {
+          return false;
+        }
+        seen.add(evaluation.persona_id);
+        return true;
+      });
+
+      allEvaluations.push(...validEvaluations);
     }
     // A bad batch is skipped rather than failing the whole panel run --
     // the remaining batches still contribute to the approval rate.
